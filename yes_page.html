@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Knew you would say yes!</title>
+    <link rel="stylesheet" href="./yes_style.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="header_text" id="yesMessage">I knew you'll say yes! ❤️ >3</h1>
+        <div class="gif_container">
+            <img src="giphy.gif">
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const name = localStorage.getItem('valentineName');
+            const yesMessageElement = document.getElementById('yesMessage');
+            if (name) {
+                yesMessageElement.textContent = `I knew you'd say yes, my ${name} ❤️ >3`;
+            }
+        });
+    </script>
+</body>
+</html>

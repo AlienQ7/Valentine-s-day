@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Share a Valentine!</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .input-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .input-container label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.2em;
+        }
+
+        .input-container input[type="text"] {
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .input-container button {
+            padding: 10px 20px;
+            font-size: 1em;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #shareableLink {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.1em;
+            word-break: break-all;
+        }
+
+        #shareableLink span {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Create a Personalized Valentine Link</h1>
+        <div class="input-container">
+            <label for="recipientName">Enter your Valentine's name:</label>
+            <input type="text" id="recipientName">
+            <button onclick="generateLink()">Generate Link</button>
+        </div>
+        <div id="shareableLink" style="display: none;">
+            <span>Share this link:</span> <a href="#" id="valentineURL"></a>
+        </div>
+    </div>
+    <script>
+        async function generateLink() {
+            const recipientName = document.getElementById('recipientName').value.trim();
+            if (!recipientName) {
+                alert("Please enter a name.");
+                return;
+            }
+
+            const response = await fetch('/api/create-link', { // Adjust this path based on your Cloudflare Worker route
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: recipientName })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                const token = data.token;
+                const baseURL = window.location.origin;
+                const valentineURL = `${baseURL}/valentine/${token}`; // Adjust this path based on your Cloudflare Worker route
+                document.getElementById('valentineURL').href = valentineURL;
+                document.getElementById('valentineURL').textContent = valentineURL;
+                document.getElementById('shareableLink').style.display = 'block';
+            } else {
+                alert("Failed to generate link.");
+            }
+        }
+    </script>
+</body>
+</html>
